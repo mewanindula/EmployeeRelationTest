@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AttendanceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EmpNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="EmpName" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RelationDetails">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EmpId" Type="int" Nullable="false" />
+    <Property Name="RelationTypeId" Type="int" Nullable="false" />
+    <Property Name="RelationName" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RelationType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RelationType" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="RelationTypeCount">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EmpId" Type="int" Nullable="false" />
+    <Property Name="RelTypeId" Type="int" Nullable="false" />
+    <Property Name="MaxCount" Type="int" />
+  </EntityType>
+  <Association Name="FK_RelationDetails_Employee">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+    <End Role="RelationDetails" Type="Self.RelationDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RelationDetails">
+        <PropertyRef Name="EmpId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RelationDetails_RelationType">
+    <End Role="RelationType" Type="Self.RelationType" Multiplicity="1" />
+    <End Role="RelationDetails" Type="Self.RelationDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RelationType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RelationDetails">
+        <PropertyRef Name="RelationTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RelationTypeCount_Employee">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+    <End Role="RelationTypeCount" Type="Self.RelationTypeCount" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RelationTypeCount">
+        <PropertyRef Name="EmpId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RelationTypeCount_RelationType">
+    <End Role="RelationType" Type="Self.RelationType" Multiplicity="1" />
+    <End Role="RelationTypeCount" Type="Self.RelationTypeCount" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RelationType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RelationTypeCount">
+        <PropertyRef Name="RelTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AttendanceModelStoreContainer">
+    <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RelationDetails" EntityType="Self.RelationDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RelationType" EntityType="Self.RelationType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RelationTypeCount" EntityType="Self.RelationTypeCount" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_RelationDetails_Employee" Association="Self.FK_RelationDetails_Employee">
+      <End Role="Employee" EntitySet="Employee" />
+      <End Role="RelationDetails" EntitySet="RelationDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RelationDetails_RelationType" Association="Self.FK_RelationDetails_RelationType">
+      <End Role="RelationType" EntitySet="RelationType" />
+      <End Role="RelationDetails" EntitySet="RelationDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RelationTypeCount_Employee" Association="Self.FK_RelationTypeCount_Employee">
+      <End Role="Employee" EntitySet="Employee" />
+      <End Role="RelationTypeCount" EntitySet="RelationTypeCount" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RelationTypeCount_RelationType" Association="Self.FK_RelationTypeCount_RelationType">
+      <End Role="RelationType" EntitySet="RelationType" />
+      <End Role="RelationTypeCount" EntitySet="RelationTypeCount" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

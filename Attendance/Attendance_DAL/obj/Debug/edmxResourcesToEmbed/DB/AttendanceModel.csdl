@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AttendanceModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="AttendanceEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Employees" EntityType="AttendanceModel.Employee" />
+    <EntitySet Name="RelationDetails" EntityType="AttendanceModel.RelationDetail" />
+    <EntitySet Name="RelationTypes" EntityType="AttendanceModel.RelationType" />
+    <EntitySet Name="RelationTypeCounts" EntityType="AttendanceModel.RelationTypeCount" />
+    <AssociationSet Name="FK_RelationDetails_Employee" Association="AttendanceModel.FK_RelationDetails_Employee">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="RelationDetail" EntitySet="RelationDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RelationTypeCount_Employee" Association="AttendanceModel.FK_RelationTypeCount_Employee">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="RelationTypeCount" EntitySet="RelationTypeCounts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RelationDetails_RelationType" Association="AttendanceModel.FK_RelationDetails_RelationType">
+      <End Role="RelationType" EntitySet="RelationTypes" />
+      <End Role="RelationDetail" EntitySet="RelationDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RelationTypeCount_RelationType" Association="AttendanceModel.FK_RelationTypeCount_RelationType">
+      <End Role="RelationType" EntitySet="RelationTypes" />
+      <End Role="RelationTypeCount" EntitySet="RelationTypeCounts" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmpNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="EmpName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="RelationDetails" Relationship="AttendanceModel.FK_RelationDetails_Employee" FromRole="Employee" ToRole="RelationDetail" />
+    <NavigationProperty Name="RelationTypeCounts" Relationship="AttendanceModel.FK_RelationTypeCount_Employee" FromRole="Employee" ToRole="RelationTypeCount" />
+  </EntityType>
+  <EntityType Name="RelationDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmpId" Type="Int32" Nullable="false" />
+    <Property Name="RelationTypeId" Type="Int32" Nullable="false" />
+    <Property Name="RelationName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Employee" Relationship="AttendanceModel.FK_RelationDetails_Employee" FromRole="RelationDetail" ToRole="Employee" />
+    <NavigationProperty Name="RelationType" Relationship="AttendanceModel.FK_RelationDetails_RelationType" FromRole="RelationDetail" ToRole="RelationType" />
+  </EntityType>
+  <EntityType Name="RelationType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RelationType1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="RelationDetails" Relationship="AttendanceModel.FK_RelationDetails_RelationType" FromRole="RelationType" ToRole="RelationDetail" />
+    <NavigationProperty Name="RelationTypeCounts" Relationship="AttendanceModel.FK_RelationTypeCount_RelationType" FromRole="RelationType" ToRole="RelationTypeCount" />
+  </EntityType>
+  <EntityType Name="RelationTypeCount">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmpId" Type="Int32" Nullable="false" />
+    <Property Name="RelTypeId" Type="Int32" Nullable="false" />
+    <Property Name="MaxCount" Type="Int32" />
+    <NavigationProperty Name="Employee" Relationship="AttendanceModel.FK_RelationTypeCount_Employee" FromRole="RelationTypeCount" ToRole="Employee" />
+    <NavigationProperty Name="RelationType" Relationship="AttendanceModel.FK_RelationTypeCount_RelationType" FromRole="RelationTypeCount" ToRole="RelationType" />
+  </EntityType>
+  <Association Name="FK_RelationDetails_Employee">
+    <End Type="AttendanceModel.Employee" Role="Employee" Multiplicity="1" />
+    <End Type="AttendanceModel.RelationDetail" Role="RelationDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RelationDetail">
+        <PropertyRef Name="EmpId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RelationTypeCount_Employee">
+    <End Type="AttendanceModel.Employee" Role="Employee" Multiplicity="1" />
+    <End Type="AttendanceModel.RelationTypeCount" Role="RelationTypeCount" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RelationTypeCount">
+        <PropertyRef Name="EmpId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RelationDetails_RelationType">
+    <End Type="AttendanceModel.RelationType" Role="RelationType" Multiplicity="1" />
+    <End Type="AttendanceModel.RelationDetail" Role="RelationDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RelationType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RelationDetail">
+        <PropertyRef Name="RelationTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RelationTypeCount_RelationType">
+    <End Type="AttendanceModel.RelationType" Role="RelationType" Multiplicity="1" />
+    <End Type="AttendanceModel.RelationTypeCount" Role="RelationTypeCount" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RelationType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RelationTypeCount">
+        <PropertyRef Name="RelTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
